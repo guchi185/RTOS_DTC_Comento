@@ -1,0 +1,10 @@
+../Core/Src/eeprom_25lc256.c:26:20:EEPROM_CS_Low	8	static
+../Core/Src/eeprom_25lc256.c:31:20:EEPROM_CS_High	8	static
+../Core/Src/eeprom_25lc256.c:37:16:SPI_TxRxByte	32	static
+../Core/Src/eeprom_25lc256.c:46:13:EEPROM_WriteEnable	8	static
+../Core/Src/eeprom_25lc256.c:54:16:EEPROM_ReadStatus	16	static
+../Core/Src/eeprom_25lc256.c:67:13:EEPROM_WaitWriteComplete	24	static
+../Core/Src/eeprom_25lc256.c:84:6:EEPROM_Init	8	static
+../Core/Src/eeprom_25lc256.c:92:13:EEPROM_WritePage	16	static
+../Core/Src/eeprom_25lc256.c:118:6:EEPROM_WriteBytes	32	static
+../Core/Src/eeprom_25lc256.c:153:6:EEPROM_ReadBytes	16	static

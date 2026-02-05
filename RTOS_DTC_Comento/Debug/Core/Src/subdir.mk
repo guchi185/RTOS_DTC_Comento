@@ -5,8 +5,15 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Core/Src/can_uds.c \
+../Core/Src/diagnostic.c \
+../Core/Src/dtc.c \
+../Core/Src/eeprom_25lc256.c \
+../Core/Src/fault_dtc.c \
 ../Core/Src/freertos.c \
 ../Core/Src/main.c \
+../Core/Src/pmic_mp5475.c \
+../Core/Src/power_monitor.c \
 ../Core/Src/stm32f4xx_hal_msp.c \
 ../Core/Src/stm32f4xx_it.c \
 ../Core/Src/syscalls.c \
@@ -14,8 +21,15 @@ C_SRCS += \
 ../Core/Src/system_stm32f4xx.c 
 
 OBJS += \
+./Core/Src/can_uds.o \
+./Core/Src/diagnostic.o \
+./Core/Src/dtc.o \
+./Core/Src/eeprom_25lc256.o \
+./Core/Src/fault_dtc.o \
 ./Core/Src/freertos.o \
 ./Core/Src/main.o \
+./Core/Src/pmic_mp5475.o \
+./Core/Src/power_monitor.o \
 ./Core/Src/stm32f4xx_hal_msp.o \
 ./Core/Src/stm32f4xx_it.o \
 ./Core/Src/syscalls.o \
@@ -23,8 +37,15 @@ OBJS += \
 ./Core/Src/system_stm32f4xx.o 
 
 C_DEPS += \
+./Core/Src/can_uds.d \
+./Core/Src/diagnostic.d \
+./Core/Src/dtc.d \
+./Core/Src/eeprom_25lc256.d \
+./Core/Src/fault_dtc.d \
 ./Core/Src/freertos.d \
 ./Core/Src/main.d \
+./Core/Src/pmic_mp5475.d \
+./Core/Src/power_monitor.d \
 ./Core/Src/stm32f4xx_hal_msp.d \
 ./Core/Src/stm32f4xx_it.d \
 ./Core/Src/syscalls.d \
@@ -39,7 +60,7 @@ Core/Src/%.o Core/Src/%.su Core/Src/%.cyclo: ../Core/Src/%.c Core/Src/subdir.mk
 clean: clean-Core-2f-Src
 
 clean-Core-2f-Src:
-	-$(RM) ./Core/Src/freertos.cyclo ./Core/Src/freertos.d ./Core/Src/freertos.o ./Core/Src/freertos.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/stm32f4xx_hal_msp.cyclo ./Core/Src/stm32f4xx_hal_msp.d ./Core/Src/stm32f4xx_hal_msp.o ./Core/Src/stm32f4xx_hal_msp.su ./Core/Src/stm32f4xx_it.cyclo ./Core/Src/stm32f4xx_it.d ./Core/Src/stm32f4xx_it.o ./Core/Src/stm32f4xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f4xx.cyclo ./Core/Src/system_stm32f4xx.d ./Core/Src/system_stm32f4xx.o ./Core/Src/system_stm32f4xx.su
+	-$(RM) ./Core/Src/can_uds.cyclo ./Core/Src/can_uds.d ./Core/Src/can_uds.o ./Core/Src/can_uds.su ./Core/Src/diagnostic.cyclo ./Core/Src/diagnostic.d ./Core/Src/diagnostic.o ./Core/Src/diagnostic.su ./Core/Src/dtc.cyclo ./Core/Src/dtc.d ./Core/Src/dtc.o ./Core/Src/dtc.su ./Core/Src/eeprom_25lc256.cyclo ./Core/Src/eeprom_25lc256.d ./Core/Src/eeprom_25lc256.o ./Core/Src/eeprom_25lc256.su ./Core/Src/fault_dtc.cyclo ./Core/Src/fault_dtc.d ./Core/Src/fault_dtc.o ./Core/Src/fault_dtc.su ./Core/Src/freertos.cyclo ./Core/Src/freertos.d ./Core/Src/freertos.o ./Core/Src/freertos.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/pmic_mp5475.cyclo ./Core/Src/pmic_mp5475.d ./Core/Src/pmic_mp5475.o ./Core/Src/pmic_mp5475.su ./Core/Src/power_monitor.cyclo ./Core/Src/power_monitor.d ./Core/Src/power_monitor.o ./Core/Src/power_monitor.su ./Core/Src/stm32f4xx_hal_msp.cyclo ./Core/Src/stm32f4xx_hal_msp.d ./Core/Src/stm32f4xx_hal_msp.o ./Core/Src/stm32f4xx_hal_msp.su ./Core/Src/stm32f4xx_it.cyclo ./Core/Src/stm32f4xx_it.d ./Core/Src/stm32f4xx_it.o ./Core/Src/stm32f4xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f4xx.cyclo ./Core/Src/system_stm32f4xx.d ./Core/Src/system_stm32f4xx.o ./Core/Src/system_stm32f4xx.su
 
 .PHONY: clean-Core-2f-Src
 

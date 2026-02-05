@@ -19,11 +19,15 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "pmic_mp5475.h"
 #include "cmsis_os.h"
+#include <stdio.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "power_monitor.h"
+#include "fault_dtc.h"
+#include "diagnostic.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -174,6 +178,23 @@ int main(void)
   MX_UART4_Init();
   /* USER CODE BEGIN 2 */
 
+  /* PMIC 출력 전압 설정 (개발요구사항 5) */
+  PMIC_SetVoutA_mV(1200);   // Buck A = 1.2V
+  DIAG_UartPrint("PMIC VOUT set to 1200mV\r\n");
+
+  uint8_t r13 = 0, r14 = 0;
+
+  if (PMIC_ReadVoutA_Code(&r13, &r14) == HAL_OK)
+  {
+      char msg[64];
+      sprintf(msg, "Readback: REG13=0x%02X, REG14=0x%02X\r\n", r13, r14);
+      DIAG_UartPrint(msg);
+  }
+  else
+  {
+      DIAG_UartPrint("Readback FAIL\r\n");
+  }
+
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -237,6 +258,23 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+
+	  // [1] 전원 상태 감시: PMIC에서 전압/고장 상태를 읽고 내부 상태값을 갱신
+	      PowerMonitor_Task();
+
+	      // [2] 방금 읽은 상태에서 저전압(UV)이면 고장 처리 루틴 수행
+	      if (PMIC_IsUV())
+	      {
+	          // [3] DTC 생성 + EEPROM 저장(비휘발성): 전원 꺼져도 고장 이력을 보존하기 위함
+	          FaultDTC_Task();
+
+	          // [4] CAN/UDS로 DTC 보고 + UART 로그 출력(디버그)
+	          //Diagnostic_Task();
+	      }
+
+	      // [5] 주기적 감시를 위해 딜레이(1초). 테스트 중엔 100ms 등으로 조정 가능
+	      HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }
@@ -568,7 +606,7 @@ static void MX_DMA_Init(void)
   HAL_NVIC_SetPriority(DMA1_Stream4_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream4_IRQn);
   /* DMA1_Stream6_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream6_IRQn);
   /* DMA1_Stream7_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream7_IRQn, 5, 0);
@@ -577,7 +615,7 @@ static void MX_DMA_Init(void)
   HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
   /* DMA2_Stream3_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream3_IRQn);
 
 }
@@ -649,9 +687,12 @@ void StartDefaultTask(void *argument)
 void StartI2CTask(void *argument)
 {
   /* USER CODE BEGIN StartI2CTask */
+	uint8_t data[2] = {0x00, 0x01}; // 보낼 데이터
   /* Infinite loop */
   for(;;)
   {
+    // [Polling] 주소 0x12인 장치에 2바이트 전송, 10ms 동안 기다림(Timeout)
+    HAL_I2C_Master_Transmit(&hi2c1, (0x12 << 1), data, 2, 10);
     osDelay(1);
   }
   /* USER CODE END StartI2CTask */

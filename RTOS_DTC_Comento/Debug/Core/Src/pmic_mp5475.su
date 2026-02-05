@@ -1,0 +1,9 @@
+../Core/Src/pmic_mp5475.c:16:19:PMIC_ReadReg	32	static
+../Core/Src/pmic_mp5475.c:33:19:PMIC_WriteReg	32	static
+../Core/Src/pmic_mp5475.c:53:19:PMIC_ReadFaultFrame	24	static
+../Core/Src/pmic_mp5475.c:77:19:PMIC_ReadVoutA_Code	16	static
+../Core/Src/pmic_mp5475.c:96:6:PMIC_IsUV	16	static
+../Core/Src/pmic_mp5475.c:103:6:PMIC_IsOV	16	static
+../Core/Src/pmic_mp5475.c:110:6:PMIC_IsOC	16	static
+../Core/Src/pmic_mp5475.c:139:13:PMIC_EncodeVref_mV	32	static
+../Core/Src/pmic_mp5475.c:156:19:PMIC_SetVoutA_mV	24	static
