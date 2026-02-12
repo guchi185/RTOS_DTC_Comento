@@ -4,15 +4,11 @@
 
 /* ============================================================
  * SPI 핸들: 프로젝트에 맞게 맞추기
- * - CubeMX가 생성한 SPI 핸들 이름이 hspi1이 아닐 수도 있음
  * ============================================================ */
 extern SPI_HandleTypeDef hspi1;
 
 /* ============================================================
- * EEPROM CS 핀 설정 (너 보드에 맞게 수정!)
- * 예:
- * - EEPROM_CS_GPIO_Port / EEPROM_CS_Pin 이 main.h에 생성돼 있으면 그대로 쓰면 됨
- * - 없다면, GPIO 포트/핀을 너가 직접 정의해야 함
+ * EEPROM CS 핀 설정
  * ============================================================ */
 #ifndef EEPROM_CS_GPIO_Port
 #define EEPROM_CS_GPIO_Port GPIOB
@@ -38,7 +34,7 @@ static uint8_t SPI_TxRxByte(uint8_t tx)
 {
     uint8_t rx = 0;
     /* HAL_SPI_TransmitReceive: tx 1바이트 보내고 rx 1바이트 받기 */
-    (void)HAL_SPI_TransmitReceive(&hspi1, &tx, &rx, 1u, 100u);
+    (void)HAL_SPI_TransmitReceive(&hspi1, &tx, &rx, 1u, EEPROM_SPI_TIMEOUT_MS);
     return rx;
 }
 
@@ -46,6 +42,7 @@ static uint8_t SPI_TxRxByte(uint8_t tx)
 static void EEPROM_WriteEnable(void)
 {
     EEPROM_CS_Low();
+
     (void)SPI_TxRxByte((uint8_t)EEPROM_CMD_WREN);
     EEPROM_CS_High();  // IMPORTANT: CS High에서 WEL latch가 확정됨
 }
@@ -57,7 +54,7 @@ static uint8_t EEPROM_ReadStatus(void)
 
     EEPROM_CS_Low();
     (void)SPI_TxRxByte((uint8_t)EEPROM_CMD_RDSR);
-    sr = SPI_TxRxByte(0xFF); // dummy write로 status read
+    sr = SPI_TxRxByte(EEPROM_DUMMY_BYTE);
     EEPROM_CS_High();
 
     return sr;
@@ -112,7 +109,7 @@ static bool EEPROM_WritePage(uint16_t addr, const uint8_t *data, uint16_t len)
     EEPROM_CS_High();
 
     /* 5) WIP가 내려갈 때까지 대기 */
-    return EEPROM_WaitWriteComplete(500u);
+    return EEPROM_WaitWriteComplete(EEPROM_WRITE_TIMEOUT_MS);
 }
 
 bool EEPROM_WriteBytes(uint16_t addr, const uint8_t *data, uint16_t len)

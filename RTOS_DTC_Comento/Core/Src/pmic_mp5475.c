@@ -63,7 +63,7 @@ HAL_StatusTypeDef PMIC_ReadFaultFrame(PMIC_FaultFrame_u *frame)
     if (PMIC_ReadReg(PMIC_REG_OV_STATUS, &ov, 1) != HAL_OK) return HAL_ERROR;
     if (PMIC_ReadReg(PMIC_REG_OC_STATUS, &oc, 1) != HAL_OK) return HAL_ERROR;
 
-    /* 과제용 단순 매핑:
+    /*
      * - uv/ov/oc 값을 “0 아니면 fault 발생”으로 간주해서 bit로 넣음
      * - 실제 제품이라면 각 레지스터의 비트 정의에 맞춰 정확히 파싱해야 함
      */

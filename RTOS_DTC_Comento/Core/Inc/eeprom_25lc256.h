@@ -12,50 +12,33 @@
  *   → 안전하게는 page boundary를 지켜서 나눠 쓰는게 좋음
  * ============================================================ */
 
-/* 25LC256 명령어(opcode) */
-typedef enum
-{
-    EEPROM_CMD_READ  = 0x03,
-    EEPROM_CMD_WRITE = 0x02,
-    EEPROM_CMD_WREN  = 0x06,
-    EEPROM_CMD_RDSR  = 0x05,
-    EEPROM_CMD_WRSR  = 0x01
-} EEPROM_Cmd_t;
-
-/* Status Register 비트(일반적으로) */
-#define EEPROM_SR_WIP   (1u << 0)  // Write-In-Progress
-#define EEPROM_SR_WEL   (1u << 1)  // Write Enable Latch
-
-/* 메모리/페이지 관련(25LC256은 32KB = 0x0000~0x7FFF) */
-#define EEPROM_SIZE_BYTES      (32768u)
-#define EEPROM_PAGE_SIZE       (64u)
-
 /* ============================================================
- * API
+ * 25LC256 (SPI EEPROM) - Command/Status 정의
+ * [피드백 반영] Command는 enum이 아니라 매크로(#define)로 정의
  * ============================================================ */
 
-/**
- * @brief  EEPROM 초기화(과제 단계: 실질 내용 없어도 됨)
- * @note   CS 핀 초기 상태 High 유지가 중요(선택 해제)
- */
+/* 25LC256 명령어(opcode) - macro */
+#define EEPROM_CMD_READ   (0x03u)
+#define EEPROM_CMD_WRITE  (0x02u)
+#define EEPROM_CMD_WREN   (0x06u)
+#define EEPROM_CMD_RDSR   (0x05u)
+#define EEPROM_CMD_WRSR   (0x01u)
+
+/* Status Register bit */
+#define EEPROM_SR_WIP     (1u << 0)  /* Write-In-Progress */
+#define EEPROM_SR_WEL     (1u << 1)  /* Write Enable Latch */
+
+/* 메모리/페이지 관련 */
+#define EEPROM_SIZE_BYTES        (32768u)
+#define EEPROM_PAGE_SIZE         (64u)
+
+/* 하드코딩 줄이기용 공통 상수 */
+#define EEPROM_SPI_TIMEOUT_MS    (100u)
+#define EEPROM_WRITE_TIMEOUT_MS  (500u)
+#define EEPROM_DUMMY_BYTE        (0xFFu)
+
 void EEPROM_Init(void);
-
-/**
- * @brief  EEPROM에 데이터 쓰기(내부에서 WREN + page split + WIP 대기)
- * @param  addr 시작 주소(0x0000~0x7FFF)
- * @param  data 쓸 데이터 포인터
- * @param  len  길이(바이트)
- * @return true 성공, false 실패
- */
 bool EEPROM_WriteBytes(uint16_t addr, const uint8_t *data, uint16_t len);
-
-/**
- * @brief  EEPROM에서 데이터 읽기
- * @param  addr 시작 주소
- * @param  data 읽어서 담을 버퍼
- * @param  len  길이
- * @return true 성공, false 실패
- */
 bool EEPROM_ReadBytes(uint16_t addr, uint8_t *data, uint16_t len);
 
-#endif
+#endif /* EEPROM_25LC256_H */
